@@ -12,6 +12,6 @@ export default {
 
 <style scoped>
 #navBar{
-
+width: 100vw;
 }
 </style>

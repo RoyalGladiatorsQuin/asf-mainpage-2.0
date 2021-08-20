@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
-    <launch-screen></launch-screen>
-    <top-contents></top-contents>
-    <common-tools></common-tools>
-    <about-us></about-us>
+      <nav-bar></nav-bar>
+      <launch-screen></launch-screen>
+      <top-contents></top-contents>
+      <common-tools></common-tools>
+      <about-us></about-us>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ import topContents from "./components/topContents/topContents";
 
 export default {
   beforeCreate() {
-    document.getElementsByTagName("body")[0].setAttribute("style","margin:0");
+    document.getElementsByTagName("body")[0].setAttribute("style", "margin:0");
   },
   name: 'App',
   components: {
@@ -33,6 +33,6 @@ export default {
 <style>
 #app {
   text-align: center;
-  margin:0;
+  margin: 0;
 }
 </style>
