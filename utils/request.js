@@ -10,16 +10,16 @@ request.interceptors.response.use(
         // console.log(response);
 
         const {data, code,message} = response.data
-
         // console.log(data, code,message);
         // debugger
-        if (code === '0') {
+        if (code === 0) {
             return data;
         } else {
             return  Promise.reject(message)
         }
     },
     function (error) {
+        console.log("rejected");
         return Promise.reject(error);
     },
 );

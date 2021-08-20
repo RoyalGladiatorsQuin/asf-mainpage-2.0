@@ -26,6 +26,18 @@ export default {
     commonTools,
     launchScreen,
     topContents
+  },
+  metaInfo() {
+    return {
+      title: "asf-mainpage-2.0",
+      meta: [
+        {
+          name: "referrer",
+          content:
+              "never"
+        }
+      ]
+    };
   }
 }
 </script>
