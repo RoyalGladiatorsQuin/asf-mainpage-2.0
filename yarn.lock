@@ -8521,6 +8521,11 @@ vue@^2.6.11:
   resolved "https://registry.nlark.com/vue/download/vue-2.6.14.tgz?cache=0&sync_timestamp=1629217665911&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue%2Fdownload%2Fvue-2.6.14.tgz"
   integrity sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=
 
+vuescroll@^4.17.3:
+  version "4.17.3"
+  resolved "https://registry.npm.taobao.org/vuescroll/download/vuescroll-4.17.3.tgz#e1c29372a007e0dff0cee6b4515783d43924f9e1"
+  integrity sha1-4cKTcqAH4N/wzua0UVeD1Dkk+eE=
+
 warning@^4.0.0:
   version "4.0.3"
   resolved "https://registry.nlark.com/warning/download/warning-4.0.3.tgz"

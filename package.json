@@ -15,7 +15,8 @@
     "husky": "^7.0.1",
     "less": "^4.1.1",
     "vue": "^2.6.11",
-    "vue-meta": "^2.4.0"
+    "vue-meta": "^2.4.0",
+    "vuescroll": "^4.17.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
