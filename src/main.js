@@ -3,7 +3,6 @@ import App from './App.vue'
 import less from 'less'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-import '../utils/request.js';
 import Meta from "vue-meta";
 
 Vue.config.productionTip = false

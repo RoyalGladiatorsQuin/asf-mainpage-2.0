@@ -39,8 +39,18 @@
     <a-card id="cnki" size="small" :head-style="{'text-align':'right'}"
             :body-style="{'padding':'20px','padding-bottom':'0'}">
       <div slot="title"><a-icon type="book"/>枝网查重</div>
-      happy
-    </a-card>
+      <a-textarea v-model="cnkiSearch" style="resize:none; width:200px" placeholder="输入文章内容" :autoSize="{minRows:3, maxRows:6} "></a-textarea>
+      <div style="display: flex;justify-content: space-between;margin: 10px 0 10px 0">
+        <a-button  style="background-color: transparent;border: none;padding: 0 10px 0 10px; box-shadow: black 0 0 0 0 inset;">
+          <a-icon type="link" />
+          查看更多
+        </a-button>
+        <a-button @click="cnkiSubmit" style=" padding: 0 10px 0 10px;  border-radius: 1px; ">
+          复制结果
+        </a-button>
+      </div>
+      </a-card>
+
   </div>
 </template>
 
@@ -48,25 +58,8 @@
 import {parseTime} from "../../../utils/time";
 import {notification} from "ant-design-vue";
 import vueScroll from 'vuescroll';
-
-function copy(text) {
-  const fakeElem = document.body.appendChild(
-      document.createElement("textarea")
-  );
-  fakeElem.style.position = "absolute";
-  fakeElem.style.left = "-9999px";
-  fakeElem.setAttribute("readonly", "");
-  fakeElem.value = text;
-  fakeElem.select();
-  try {
-    return document.execCommand("copy");
-  } catch (err) {
-    return false;
-  } finally {
-    fakeElem.parentNode.removeChild(fakeElem);
-  }
-}
-
+import copy from "../../../utils/copy";
+import axios from 'axios';
 export default {
   name: "commonTools",
   components: {
@@ -128,6 +121,11 @@ export default {
       cfLoadedOnce: false,
       zdLoading: false,
       zdInputMessage: "",
+      cnkiLoading: false,
+      cnkiSearch: '',
+      cnkiResult:[],
+      cnkiAlike:[],
+      cnkiMaxSearchLength: 1000,
       ops: {
         vuescroll: {
           mode: 'native',
@@ -158,6 +156,13 @@ export default {
       }
     }
   },
+  mounted(){
+    this.$data.cnkiResult = {
+      related: false,
+      rate: 0
+    }
+    this.$data.alike = []
+  },
   methods: {
     zdQuery() {
       console.log(this.$data.zdInputMessage);
@@ -165,53 +170,105 @@ export default {
     cfQuery() {
       this.$data.cfLoading = true;
       this.$data.cfQueryList = [];
-      this.$request({
-        url: `https://tools.asoulfan.com/api/cfj/?name=${this.$data.cfInputMessage}`,
-        methods: "GET",
-      })
-          .then(this.cfSetSearchReady)
-          .then(this.cfSetSearchResponse)
+      axios.get('https://tools.asoulfan.com/api/cfj/', { params: { name: this.$data.cfInputMessage }})
+          .then(res => {
+            const {list} = res.data.data;
+            this.$data.cfQueryMessageJSONObject = res.data.data;
+            this.$data.cfQueryList = list || [];
+          })
           .then(this.cfQueryCopyHandler)
-          .catch(this.cfQueryError);
+          .catch(err => {
+            notification.error({
+              description: "请检查网络连接或稍作等待",
+              message: "成分姬获取失败"
+            });
+            console.log(err);
+          })
+          .finally(() => {
+            this.$data.cfLoading = false;
+          })
     },
-    cfSetCopyText(item) {
-      const {uname} = item;
 
-      return uname;
-    },
-    cfSetSearchReady(success) {
-      setTimeout(() => {
-        this.$data.cfLoading = false;
-      }, 1000);
-      return success;
-    },
-    cfSetSearchResponse(response) {
-      const {list} = response;
-      this.$data.cfQueryMessageJSONObject = response;
-      this.$data.cfQueryList = list || [];
-    },
-    cfQueryError(error) {
-      console.log({message: error, type: "error"});
-      notification.error({
-        description: "请检查网络连接或稍作等待",
-        message: "成分姬获取失败"
-      });
-      this.$data.cfLoading = false;
-    },
     cfQueryCopyHandler() {
-      const vupName = this.$data.cfQueryList.map(this.cfSetCopyText).join("、");
+      const vupName = this.$data.cfQueryList.map(
+          function (item){
+            const {uname} = item;
+            return uname;
+          })
+          .join("、");
       const selectTime = parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}");
       const tmp = `@${this.cfInputMessage} 关注的VUP有：\r\n${vupName}\r\n查询时间：${selectTime}\r\n数据来源：@ProJectASF × https://b23.tv/cflHxi`;
       copy(tmp);
-      console.log(this.$data.cfQueryList);
       notification.success({
         description: "成功",
         message: "已将精简版关注报告复制至剪贴板"
       });
       this.$data.cfLoading = false;
       this.$data.cfLoadedOnce = true;
-      console.log(this.$data.cfQueryMessageJSONObject);
-    }
+    },
+    cnkiHandleCopyText() {
+      let tmp = '';   //复制文字
+      let rate = this.toPercent(this.$data.cnkiResult.rate);  //总文字复制比
+      let selectTime = parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}");   //查重时间
+      //没有重复小作文
+      if(this.$data.cnkiResult.related.length === 0) {
+        tmp = `@ProJectASF × 枝网文本复制检测报告[简洁]\r\n查重时间：${selectTime}\r\n总文字复制比：${rate}\r\n\r\n查重结果仅作参考，请注意辨别是否为原创`
+      }
+      else {
+        let createTime = parseTime(this.$data.cnkiResult.related[0].reply.ctime, "{y}-{m}-{d} {h}:{i}:{s}");  //发布时间
+        tmp = `@ProJectASF × 枝网文本复制检测报告[简洁]\r\n查重时间：${selectTime}\r\n总文字复制比：${rate}\r\n相似小作文：${this.$data.cnkiResult.related[0].reply_url}\r\n作者：${this.$data.cnkiResult.related[0].reply.m_name}\r\n发表时间：${createTime}\r\n\r\n查重结果仅作参考，请注意辨别是否为原创`
+      }
+      const status = copy(tmp)
+      if (status) {
+        console.log({ message: "复制成功,适度玩梗捏", type: "success"});
+        notification.success({
+          description: "适度玩梗捏",
+          message: "精简版关注报告复制成功"
+        });
+      } else {
+        notification.error({
+          description: "请检查网络或稍作等待",
+          message: "复制失败"
+        });
+        console.log({ message: "复制失败", type: "error"});
+      }
+    },
+    cnkiSubmit(){
+      if(this.$data.cnkiSearch.length < 10) {
+        notification.warn({description: '至少十个字捏', message: '输入内容过短'});
+        return;
+      }
+
+      this.$data.cnkiLoading = true;
+      axios.post('https://asoulcnki.asia/v1/api/check', {text: this.$data.cnkiSearch})
+          .then(res => {
+            const data = res.data.data
+            if (res.data.code) {
+              console.log({message: data.message, type: 'error'})
+              return
+            }
+            if (data.related.length === 0) {
+              console.log({message: '没有重复的小作文捏', type: 'success'});
+              return
+            }
+            data.related.forEach(s => {
+              s.reply.createTime = parseTime(s.reply.ctime, '{y}/{m}/{d} {h}:{i}')
+            });
+            this.$data.cnkiResult = data
+            this.$data.cnkiAlike = data.related;
+          })
+          .then(this.cnkiHandleCopyText)
+          .catch(err => {
+            console.log({message: err, type: 'error'})
+          })
+          .finally(() => {
+            this.$data.cnkiLoading = false;
+          })
+    },
+    toPercent(){
+      const point = this.$data.cnkiResult.rate
+      return Number(point * 100).toFixed(2) + '%';
+    },
   }
 }
 </script>
@@ -250,14 +307,12 @@ export default {
 
         #cfQueryCell {
           text-align: left;
-
-          #cfQueryCellAvatar {
-
-          }
         }
       }
     }
   }
+  #cnki{
 
+  }
 }
 </style>
