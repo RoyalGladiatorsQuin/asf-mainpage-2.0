@@ -26,7 +26,8 @@
           <!--          :body-style=" {
                   'padding':'0','overflow-x': 'hidden','overflow-y':'auto','max-height':'100px'}"-->
           <vue-scroll :ops="ops">
-            <a-comment id="cfQueryCell" v-for="data in cfQueryMessageJSONObject.list" v-bind:key="data.uname" :author="data.uname">
+            <a-comment id="cfQueryCell" v-for="data in cfQueryMessageJSONObject.list" v-bind:key="data.uname"
+                       :author="data.uname">
               <a-avatar slot="avatar" id="cfQueryCellAvatar" :src="data.face"></a-avatar>
               <p slot="content" style="margin-bottom: 0; text-align: left;text-indent: 2em; font-size: 10px;">{{
                   data.sign
@@ -36,20 +37,43 @@
         </a-card>
       </a-card>
     </a-card>
-    <a-card id="cnki" size="small" :head-style="{'text-align':'right'}"
-            :body-style="{'padding':'20px','padding-bottom':'0'}">
-      <div slot="title"><a-icon type="book"/>枝网查重</div>
-      <a-textarea v-model="cnkiSearch" style="resize:none; width:200px" placeholder="输入文章内容" :autoSize="{minRows:3, maxRows:6} "></a-textarea>
-      <div style="display: flex;justify-content: space-between;margin: 10px 0 10px 0">
-        <a-button  style="background-color: transparent;border: none;padding: 0 10px 0 10px; box-shadow: black 0 0 0 0 inset;">
-          <a-icon type="link" />
-          查看更多
+    <div id="cnkiWrapper">
+      <a-card id="cnki" size="small" :head-style="{'text-align':'right'}"
+              :body-style="{'padding':'20px','padding-bottom':'0'}">
+        <div slot="title">
+          <a-icon type="book"/>
+          枝网查重
+        </div>
+          <a-textarea v-model="cnkiSearch" style="resize:none; " placeholder="输入文章内容"
+                      :autoSize="{minRows:6, maxRows:8}" >
+            <vue-scroll :ops="this.$data.ops"></vue-scroll>
+          </a-textarea>
+        <div style="display: flex;justify-content: space-between;margin: 10px 0 10px 0">
+          <a-button @click="cnkiMore"
+                    style="background-color: transparent;border: none;padding: 0 10px 0 10px; box-shadow: black 0 0 0 0 inset;">
+            <a-icon type="link"/>
+            查看更多
+          </a-button>
+          <a-button @click="cnkiSubmit" style=" padding: 0 10px 0 10px;  border-radius: 1px; ">
+            复制结果
+          </a-button>
+        </div>
+      </a-card>
+      <div id="buttons">
+        <a-button>
+          <a-icon type="smile"/>
+          表情包
         </a-button>
-        <a-button @click="cnkiSubmit" style=" padding: 0 10px 0 10px;  border-radius: 1px; ">
-          复制结果
+        <a-button>
+          <a-icon type="line-chart"/>
+          数据分析
+        </a-button>
+        <a-button>
+          <a-icon type="search"/>
+          今天溜什么
         </a-button>
       </div>
-      </a-card>
+    </div>
 
   </div>
 </template>
@@ -60,6 +84,7 @@ import {notification} from "ant-design-vue";
 import vueScroll from 'vuescroll';
 import copy from "../../../utils/copy";
 import axios from 'axios';
+
 export default {
   name: "commonTools",
   components: {
@@ -123,8 +148,8 @@ export default {
       zdInputMessage: "",
       cnkiLoading: false,
       cnkiSearch: '',
-      cnkiResult:[],
-      cnkiAlike:[],
+      cnkiResult: [],
+      cnkiAlike: [],
       cnkiMaxSearchLength: 1000,
       ops: {
         vuescroll: {
@@ -156,7 +181,7 @@ export default {
       }
     }
   },
-  mounted(){
+  mounted() {
     this.$data.cnkiResult = {
       related: false,
       rate: 0
@@ -170,7 +195,7 @@ export default {
     cfQuery() {
       this.$data.cfLoading = true;
       this.$data.cfQueryList = [];
-      axios.get('https://tools.asoulfan.com/api/cfj/', { params: { name: this.$data.cfInputMessage }})
+      axios.get('https://tools.asoulfan.com/api/cfj/', {params: {name: this.$data.cfInputMessage}})
           .then(res => {
             const {list} = res.data.data;
             this.$data.cfQueryMessageJSONObject = res.data.data;
@@ -188,10 +213,9 @@ export default {
             this.$data.cfLoading = false;
           })
     },
-
     cfQueryCopyHandler() {
       const vupName = this.$data.cfQueryList.map(
-          function (item){
+          function (item) {
             const {uname} = item;
             return uname;
           })
@@ -201,41 +225,45 @@ export default {
       copy(tmp);
       notification.success({
         description: "成功",
-        message: "已将精简版关注报告复制至剪贴板"
+        message: "已将枝网文本复制检测报告[简洁]复制至剪贴板"
       });
       this.$data.cfLoading = false;
       this.$data.cfLoadedOnce = true;
     },
     cnkiHandleCopyText() {
       let tmp = '';   //复制文字
-      let rate = this.toPercent(this.$data.cnkiResult.rate);  //总文字复制比
+      let rate = Number(this.$data.cnkiResult.rate * 100).toFixed(2) + '%';  //总文字复制比
       let selectTime = parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}");   //查重时间
       //没有重复小作文
-      if(this.$data.cnkiResult.related.length === 0) {
+
+      if ((this.$data.cnkiResult.related.length === 0) || (this.$data.cnkiResult.related === false)) {
         tmp = `@ProJectASF × 枝网文本复制检测报告[简洁]\r\n查重时间：${selectTime}\r\n总文字复制比：${rate}\r\n\r\n查重结果仅作参考，请注意辨别是否为原创`
-      }
-      else {
+      } else {
         let createTime = parseTime(this.$data.cnkiResult.related[0].reply.ctime, "{y}-{m}-{d} {h}:{i}:{s}");  //发布时间
         tmp = `@ProJectASF × 枝网文本复制检测报告[简洁]\r\n查重时间：${selectTime}\r\n总文字复制比：${rate}\r\n相似小作文：${this.$data.cnkiResult.related[0].reply_url}\r\n作者：${this.$data.cnkiResult.related[0].reply.m_name}\r\n发表时间：${createTime}\r\n\r\n查重结果仅作参考，请注意辨别是否为原创`
       }
       const status = copy(tmp)
-      if (status) {
-        console.log({ message: "复制成功,适度玩梗捏", type: "success"});
+      if (this.$data.cnkiResult.related === false) {
         notification.success({
-          description: "适度玩梗捏",
-          message: "精简版关注报告复制成功"
+          description: "已将枝网文本复制检测报告[简洁]复制至剪贴板",
+          message: "没有重复的小作文"
+        });
+      } else if (status) {
+        notification.success({
+          description: "已将枝网文本复制检测报告[简洁]复制至剪贴板",
+          message: "成功"
         });
       } else {
         notification.error({
           description: "请检查网络或稍作等待",
           message: "复制失败"
         });
-        console.log({ message: "复制失败", type: "error"});
+        console.log({message: "复制失败", type: "error"});
       }
     },
-    cnkiSubmit(){
-      if(this.$data.cnkiSearch.length < 10) {
-        notification.warn({description: '至少十个字捏', message: '输入内容过短'});
+    cnkiSubmit() {
+      if (this.$data.cnkiSearch.length < 10) {
+        notification.warn({description: '查重至少十个字哦', message: '输入内容过短'});
         return;
       }
 
@@ -244,11 +272,10 @@ export default {
           .then(res => {
             const data = res.data.data
             if (res.data.code) {
-              console.log({message: data.message, type: 'error'})
+              notification.error({message: "网络出错", description: data.message})
               return
             }
             if (data.related.length === 0) {
-              console.log({message: '没有重复的小作文捏', type: 'success'});
               return
             }
             data.related.forEach(s => {
@@ -259,16 +286,16 @@ export default {
           })
           .then(this.cnkiHandleCopyText)
           .catch(err => {
-            console.log({message: err, type: 'error'})
+            notification.error({message: '发生错误', description: "请检查网络或稍作等待"});
+            console.log(err);
           })
           .finally(() => {
             this.$data.cnkiLoading = false;
           })
     },
-    toPercent(){
-      const point = this.$data.cnkiResult.rate
-      return Number(point * 100).toFixed(2) + '%';
-    },
+    cnkiMore() {
+      window.open("https://tools.asoulfan.com/#/tools/checkArticle");
+    }
   }
 }
 </script>
@@ -299,6 +326,7 @@ export default {
 
   #cfQuerier {
     width: 300px;
+    min-height: 300px;
 
     #cfInnerCard {
       margin-top: 10px;
@@ -311,8 +339,21 @@ export default {
       }
     }
   }
-  #cnki{
 
+  #cnkiWrapper {
+    height:300px;
+    #cnki {
+      width: 400px;
+
+    }
+
+    #buttons {
+      margin-top: 20px;
+      width: 400px;
+      display: flex;
+      justify-content: space-between;
+    }
   }
+
 }
 </style>
