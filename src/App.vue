@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <nav-bar></nav-bar>
+      <asf-navbar></asf-navbar>
       <launch-screen></launch-screen>
       <top-contents></top-contents>
       <common-tools></common-tools>
@@ -9,23 +9,22 @@
 </template>
 
 <script>
-import navBar from "./components/navBar/navBar";
 import aboutUs from "./components/aboutUs/aboutUs";
 import commonTools from "./components/commonTools/commonTools";
 import launchScreen from "./components/launchScreen/launchScreen";
 import topContents from "./components/topContents/topContents";
-
+import asfNavbar from 'asf-navbar-vue'
 export default {
   beforeCreate() {
     document.getElementsByTagName("body")[0].setAttribute("style", "margin:0");
   },
   name: 'App',
   components: {
-    navBar,
+    asfNavbar,
     aboutUs,
     commonTools,
     launchScreen,
-    topContents
+    topContents,
   },
   metaInfo() {
     return {

@@ -1822,6 +1822,16 @@ array-unique@^0.3.2:
   resolved "https://registry.npm.taobao.org/array-unique/download/array-unique-0.3.2.tgz"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
+asf-navbar-vue@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.npmjs.org/asf-navbar-vue/-/asf-navbar-vue-0.1.10.tgz#3444e56b4fdcac1c984fda1a0d8dc2c620cd6922"
+  integrity sha512-K3Bz1cGJsKZlm58IHi8gSh395MV1Z5WHCH+0goAOK6OB0A1AiRfne+2zrZyOwc0Onh1HLi5P0YFrIBCGu9vwoA==
+  dependencies:
+    less "^4.1.1"
+    less-loader "^7.3.0"
+    vue "^2.6.11"
+    vue-avatar "^2.3.3"
+
 asn1.js@^5.2.0:
   version "5.4.1"
   resolved "https://registry.npm.taobao.org/asn1.js/download/asn1.js-5.4.1.tgz"
@@ -8444,6 +8454,11 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/vm-browserify/download/vm-browserify-1.1.2.tgz"
   integrity sha1-eGQcSIuObKkadfUR56OzKobl3aA=
+
+vue-avatar@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/vue-avatar/-/vue-avatar-2.3.3.tgz#e125bf4f4a6f4f9480da0c522020266a8609d2a8"
+  integrity sha512-Z57ILRTkFIAuCH9JiFBxX74C5zua5ub/jRDM/KZ+QKXNfscvmUOgWBs3kA2+wrpZMowIvfLHIT0gvQu1z+zpLg==
 
 vue-eslint-parser@^7.0.0:
   version "7.10.0"
