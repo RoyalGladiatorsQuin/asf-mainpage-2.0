@@ -12,7 +12,7 @@
 				</div>
 			</header>
 			<div id="All">
-				<tools>
+				<div class="tools">
 					<div class="img" style="height: 100%;">
 						<img :src="imgURL[0].bella" width="100%" height="100%">
 					</div>
@@ -26,8 +26,8 @@
 						</div>
 						<div class="triangle"></div>
 					</div>
-				</tools>
-				<tools>
+				</div>
+				<div class="tools">
 					<div class="img" style="height: 100%;">
 						<img :src="imgURL[1].carol" width="100%" height="100%" alt="">
 					</div>
@@ -41,8 +41,8 @@
 						</div>
 						<div class="triangle"></div>
 					</div>
-				</tools>
-				<tools>
+				</div>
+				<div class="tools">
 					<div class="img" style="height: 100%;">
 						<img :src="imgURL[2].diana" width="100%" height="100%" alt="">
 					</div>
@@ -56,8 +56,8 @@
 						</div>
 						<div class="triangle"></div>
 					</div>
-				</tools>
-				<tools>
+				</div>
+				<div class="tools">
 					<div class="img" style="height: 100%;">
 						<img :src="imgURL[3].queen" width="100%" height="100%" alt="">
 					</div>
@@ -71,8 +71,8 @@
 						</div>
 						<div class="triangle"></div>
 					</div>
-				</tools>
-				<tools>
+				</div>
+				<div class="tools">
 					<div class="img" style="height: 100%;">
 						<img :src="imgURL[4].ava" width="100%" height="100%" alt="">
 					</div>
@@ -86,17 +86,13 @@
 						</div>
 						<div class="triangle"></div>
 					</div>
-				</tools>
+				</div>
 			</div>
 	</div>
 </template>
 
 <script>
-	import tools from './tools.vue'
 	export default {
-		components:{
-			tools
-		},
 		data(){
 			return {
 				imgURL:[
@@ -156,6 +152,12 @@
     background-color: grey;
 }
 	
+	.tools{
+		position: relative;
+		width: 28vh;
+		height: 65vh;
+	}
+	
 	#All{
 		display: flex;
 		flex-direction: row;
@@ -174,7 +176,7 @@
 		height: 100vh;
 	}
 	
-	#tools .img::after{
+	.tools .img::after{
 		content: "";
 		width: 100%;
 		height: 100%;
@@ -192,21 +194,21 @@
 	}
 	
 	
-	#tools .img{
+	.tools .img{
 		cursor: pointer;
 		filter: grayscale(1);
 		transition: all 0.5s;
 	}
 	
-	#tools:hover .img{
+	.tools:hover .img{
 		filter: grayscale(0);
 	}
 	
-	#tools:hover .introduction{
+	.tools:hover .introduction{
 		opacity: 0;
 	}
 	
-	#tools .introduction{
+	.tools .introduction{
 		transition: all 0.5s;
 	}
 	
@@ -278,7 +280,7 @@
 		z-index: 1;
 		font-weight: 700;
 		text-align: center;
-		line-height: 170%;
+		line-height: 4.5vh;
     width: 100%;
 		height: 100%;
 		background-color: white;
@@ -308,6 +310,66 @@
 		position: absolute;
 		top: 88%;
 		left: 27%;
+	}
+	
+	@media screen and (min-width: 1026px) and (max-width: 1437px){
+		header{
+			font-size: 2rem;
+		}
+		
+		.introduction>span:first-child{
+			font-size: 2rem;
+			font-weight: 600;
+		}
+		
+		.introduction>span:last-child{
+			font-size: 3rem;
+			text-decoration: blink;
+		}
+		
+		.Link{
+			font-size: 13px;
+		}
+	}
+	
+	@media screen and (min-width: 1438px) and (max-width: 1600px) {
+		header{
+			font-size: 2rem;
+		}
+		
+		.introduction>span:first-child{
+			font-size: 2rem;
+			font-weight: 600;
+		}
+		
+		.introduction>span:last-child{
+			font-size: 3rem;
+			text-decoration: blink;
+		}
+		
+		.Link{
+			font-size: 13px;
+		}
+	}
+	
+	@media screen and (min-width:1601px) and (max-width: 1800px){
+		header{
+			font-size: 2rem;
+		}
+		
+		.introduction>span:first-child{
+			font-size: 2rem;
+			font-weight: 600;
+		}
+		
+		.introduction>span:last-child{
+			font-size: 3rem;
+			text-decoration: blink;
+		}
+		
+		.Link{
+			font-size: 13px;
+		}
 	}
 	
 </style>
