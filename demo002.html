@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>主页实验demo001</title>
+
+		<!--    <link rel="stylesheet" href="css/bootstrap.min.css">-->
+		<link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap-v4-rtl/4.1.1-1/css/bootstrap.min.css">
+		<!--    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">-->
+			<link rel="stylesheet" href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
+
+			<link rel="stylesheet" href="css/style.css">
+		 
+			
+	</head>
+	<body>
+		<section class="ftco-cover ftco-slant ftco-slant-dark" id="Main">
+			<div class="Backgroundimage">
+				<img id="background-image" src="./img/BackGround.webp" alt="">
+				<div id="home-container" class="container" style="margin-top: -60px;">
+					<div class="row align-items-center text-center ftco-vh-100">
+						<div class="col-md-10 ftco-animate" style="text-align:left; text-decoration: none;">
+							<h1 class="ftco-heading ">A-SOUL FAN</h1>
+							<h2 class="h5 ftco-subheading mb-5">属于一个魂的小城捏</h2>
+							<!--<a href="https://wiki.asoulfan.com/" class="btn btn-primary ftco-animate">访问社区</a>
+							<button class="btn1 ripple-effect ">访问<span class="ripple"></span>
+							</button>-->
+							<div class="btn btn-primary" style="margin-top: -2em;">
+								<a href="#" class="btn">按钮</a> 
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <script type="text/javascript">
+			(function($){
+			   $.fn.snow = function(options){
+			   var $flake = $('<div id="snowbox" />').css({'position': 'absolute','z-index':'9999', 'top': '-50px'}).html('&#10052;'),
+			   documentHeight     = $(document).height(),
+			   documentWidth  = $(document).width(),
+			   defaults = {
+				  minSize   : 10,
+				  maxSize   : 20,
+				  newOn     : 1000,
+				  flakeColor : "#AFDAEF" /* 自定义颜色 */
+			   },
+			   options = $.extend({}, defaults, options);
+			   var interval= setInterval( function(){
+			   var startPositionLeft = Math.random() * documentWidth - 100,
+			   startOpacity = 0.5 + Math.random(),
+			   sizeFlake = options.minSize + Math.random() * options.maxSize,
+			   endPositionTop = documentHeight - 200,
+			   endPositionLeft = startPositionLeft - 500 + Math.random() * 500,
+			   durationFall = documentHeight * 10 + Math.random() * 5000;
+			   $flake.clone().appendTo('body').css({
+				  left: startPositionLeft,
+				  opacity: startOpacity,
+				  'font-size': sizeFlake,
+				  color: options.flakeColor
+			   }).animate({
+				  top: endPositionTop,
+				  left: endPositionLeft,
+				  opacity: 0.2
+			   },durationFall,'linear',function(){
+					$(this).remove()
+			   });
+			   }, options.newOn);
+				};
+				})(jQuery);
+			$(function(){
+				$.fn.snow({
+				   minSize: 5, /* 定义雪花最小尺寸 */
+				   maxSize: 50,/* 定义雪花最大尺寸 */
+				   newOn: 200  /* 定义密集程度，数字越小越密集 */
+				});
+			});
+			</script>
+
+		<!--<script src="js/jquery.min.js"></script>-->
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.2.1/jquery.min.js"></script>
+		<!--<script src="js/popper.min.js"></script>-->
+		<!--<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/popper.js/1.16.1/popper.js"></script>-->
+		<!--<script src="js/bootstrap.min.js"></script>-->
+		<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap-v4-rtl/4.1.1-1/js/bootstrap.js"></script>
+		<!--<script src="js/jquery.easing.1.3.js"></script>-->
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-easing/1.3/jquery.easing.min.js"></script>
+		<!--<script src="js/jquery.waypoints.min.js"></script>-->
+		<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/waypoints/4.0.0/jquery.waypoints.js"></script>
+		<!--<script src="js/owl.carousel.min.js"></script>-->
+		<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/OwlCarousel2/2.2.1/owl.carousel.min.js"></script>
+		<!--<script src="js/jquery.animateNumber.min.js"></script>-->
+		<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-animateNumber/0.0.14/jquery.animateNumber.min.js"></script>
+		<script src="js/main.js"></script>
+
+
+
+	</body>
+</html>
